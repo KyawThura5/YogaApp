@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -31,9 +32,22 @@ class CourseEntryActivity : AppCompatActivity() {
 
     private  var selectedDate: String=""
 
+    private var capacity:String =""
+
+    private var duration:String =""
+
+    private var price:String =""
+
+    private var flag: Boolean = false
+
+    lateinit var dbHelper: YogaDBHelper
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        dbHelper = YogaDBHelper(this)
         binding = ActivityCourseEntryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -96,17 +110,88 @@ class CourseEntryActivity : AppCompatActivity() {
         //Type of Class (radio)
 
 
-        binding.btnSaveCourse.setOnClickListener{
+        binding.btnSaveCourse.setOnClickListener {
+
+            flag = false
+            if (selectedDay == days[0]) {
+                selectedDay = "No selected Day of the week"
+                flag = true
+            }
 
             val checkedId = binding.rdoGroupType.checkedRadioButtonId
-            if(checkedId!=1){
+
+            if (checkedId != -1) {
                 val rdoBtn = findViewById<RadioButton>(checkedId)
-                typeOfClass =rdoBtn.text.toString()
+                typeOfClass = rdoBtn.text.toString()
+            } else {
+                typeOfClass = "No selected type of Class"
+                flag = true
+            }
+
+            if (selectedTime == "") {
+                selectedTime = "No selected Time"
+                flag = true
+            }
+            capacity = binding.editCapacity.text.toString()
+
+            if (capacity.isEmpty()) {
+                binding.editCapacity.error = "Please fill the capacity"
+                flag = true
+            }
+
+            duration = binding.editDuration.text.toString()
+
+            if (duration.isEmpty()) {
+                binding.editDuration.error = "Please fill the duration"
+                flag = true
+            }
+
+            price = binding.editPrice.text.toString()
+
+            if (price.isEmpty()) {
+                binding.editPrice.error = " Please fill the price"
+                flag = true
             }
 
             description = binding.editDescription.text.toString()
-            Toast.makeText(this,"$selectedDay,$typeOfClass,$description",Toast.LENGTH_LONG).show()
 
+            if (description.isEmpty()) {
+                binding.editDescription.error = " Please fill description"
+                flag = true
+            }
+
+            Toast.makeText(this, "$selectedDay,$typeOfClass,$description", Toast.LENGTH_LONG).show()
+
+            if (!flag) {
+                val stringBuilder = StringBuilder()
+                stringBuilder.append("Are you sure you want to save? \n")
+                    .append("Course Information \n")
+                    .append("Day of Week: $selectedDay \n")
+                    .append("Selected Time: $selectedTime \n")
+                    .append("Capacity: $capacity \n")
+                    .append("Duration : $duration \n")
+                    .append("Price: $price \n")
+                    .append("Type of Class: $typeOfClass\n")
+                    .append("Description : $description\n")
+
+                val alertDialog = AlertDialog.Builder(this)
+                alertDialog.setTitle("Confirmation")
+                    .setMessage(stringBuilder.toString())
+                    .setCancelable(false)
+                    .setPositiveButton("Yes") { dialog, which ->
+                        //Toast.makeText(this, "Yes Click!", Toast.LENGTH_LONG).show()
+                        dbHelper.saveCourse("Yoga Course");
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("No") { dialog, which ->
+                        Toast.makeText(this, "No Click!", Toast.LENGTH_LONG).show()
+                        dialog.dismiss()
+                    }
+
+                val alert = alertDialog.create()
+                alert.show()
+
+            }
         }
     }
 }
