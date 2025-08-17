@@ -67,7 +67,7 @@ class YogaDBHelper(context: Context): SQLiteOpenHelper(context,"yoga.db",null,1)
     }
 
     public fun saveCourse (msg:String){
-        Log.i("Yoga DB","Save Course! $msg")
+        Log.i("Yoga DB","Testing! $msg")
     }
 
 }
