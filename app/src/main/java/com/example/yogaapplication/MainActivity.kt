@@ -20,6 +20,12 @@ class MainActivity : AppCompatActivity() {
         binding.btnCourseEntry.setOnClickListener{
            intent = Intent(this,CourseEntryActivity::class.java)
             startActivity(intent)
+            //finish()
+        }
+
+        binding.btnShowCourses.setOnClickListener {
+            intent = Intent(this, ShowCoursesActivity::class.java)
+            startActivity(intent)
            // finish()
         }
 

@@ -2,8 +2,10 @@ package com.example.yogaapplication
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -174,14 +176,30 @@ class CourseEntryActivity : AppCompatActivity() {
                     .append("Type of Class: $typeOfClass\n")
                     .append("Description : $description\n")
 
+                val yogaCourse = YogaCourse(0,selectedDay,selectedTime,capacity,duration,price,typeOfClass,description)
+
                 val alertDialog = AlertDialog.Builder(this)
                 alertDialog.setTitle("Confirmation")
                     .setMessage(stringBuilder.toString())
                     .setCancelable(false)
                     .setPositiveButton("Yes") { dialog, which ->
-                        //Toast.makeText(this, "Yes Click!", Toast.LENGTH_LONG).show()
-                        dbHelper.saveCourse("Yoga Course");
+                       val result= dbHelper.saveCourse(yogaCourse);
+                        if(result!= (-1).toLong()){
+                            Toast.makeText(this, "Saved Coures Record!", Toast.LENGTH_LONG).show()
+                        }else{
+                            Toast.makeText(this, "Saved Course Error!", Toast.LENGTH_LONG).show()
+                        }
+
+                        val courseLists = dbHelper.getAllCourses()
+
+                       courseLists.forEach {item ->
+                           Log.i("Save Results","******"+item.dayOfWeek+","+item.typeOfClass)
+                       }
+
                         dialog.dismiss()
+                        intent = Intent(this,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     }
                     .setNegativeButton("No") { dialog, which ->
                         Toast.makeText(this, "No Click!", Toast.LENGTH_LONG).show()

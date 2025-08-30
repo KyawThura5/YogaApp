@@ -35,7 +35,8 @@
             />
 
         <ImageButton
-            android:src="@drawable/ic_launcher_background"
+            android:id="@+id/btnShowCourses"
+            android:src="@drawable/icon_list"
             android:layout_columnWeight="1"
             android:layout_width="100dp"
             android:layout_height="100dp"
