@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yogaapplication.databinding.CourseItemViewBinding
 
-class YogaCourseAdpater(val courseList:List<YogaCourse>): RecyclerView.Adapter<YogaCourseAdpater.YogaCourseViewHolder>()
+class YogaCourseAdpater(val courseList:List<YogaCourse>,
+    val onEditClick:(YogaCourse)-> Unit,
+    val onDeleteClick:(Int)-> Unit
+    ): RecyclerView.Adapter<YogaCourseAdpater.YogaCourseViewHolder>()
 {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,6 +26,15 @@ class YogaCourseAdpater(val courseList:List<YogaCourse>): RecyclerView.Adapter<Y
         holder.binding.txtViewDayOfWeek.text = courseItem.dayOfWeek
         holder.binding.txtViewTimeOfCourse.text = courseItem.timeOfCourse
         holder.binding.txtViewTypeOfClass.text = courseItem.typeOfClass
+
+        holder.binding.btnEditCourse.setOnClickListener {
+            onEditClick(courseItem)
+
+        }
+
+        holder.binding.btnDeleteCourse.setOnClickListener {
+            onDeleteClick(courseItem.id)
+        }
     }
 
     override fun getItemCount(): Int {

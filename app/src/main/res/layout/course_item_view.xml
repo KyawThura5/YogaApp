@@ -30,6 +30,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:padding="10dp"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/btnShowDetailCourse"
+            android:src="@drawable/icon_show"
+            android:background="@color/Green"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"/>
+
+        <ImageButton
+            android:id="@+id/btnAddClass"
+            android:src="@drawable/icon_add"
+            android:background="@color/Green"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"/>
+        
+        <ImageButton
+            android:id="@+id/btnEditCourse"
+            android:src="@drawable/icon_edit"
+            android:background="@color/Green"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"/>
+
+        <ImageButton
+            android:id="@+id/btnDeleteCourse"
+            android:src="@drawable/icon_delete"
+            android:background="@color/Green"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        
+        
+    </LinearLayout>
+
 
 
 </LinearLayout>

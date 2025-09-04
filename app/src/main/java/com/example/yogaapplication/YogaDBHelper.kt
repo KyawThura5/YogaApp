@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import androidx.annotation.IntegerRes
 
 class YogaDBHelper(context: Context): SQLiteOpenHelper(context,"yoga.db",null,1) {
     private val courseTableName ="course"
@@ -109,4 +110,49 @@ class YogaDBHelper(context: Context): SQLiteOpenHelper(context,"yoga.db",null,1)
         return courseList
     }
 
+    fun editCourse (yogaCourse: YogaCourse):Int{
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(id,yogaCourse.id)
+        values.put(dayOfWeek,yogaCourse.dayOfWeek)
+        values.put(timeOfCourse,yogaCourse.timeOfCourse)
+        values.put(capacity,yogaCourse.capacity)
+        values.put(duration,yogaCourse.duration)
+        values.put(price,yogaCourse.price)
+        values.put(typeOfClass,yogaCourse.typeOfClass)
+        values.put(description,yogaCourse.description)
+       val result = db.update(courseTableName,values,"$id=?",
+           arrayOf(yogaCourse.id.toString()))
+        db.close()
+        Log.i("Yoga Db","Updated Record : $result")
+        return  result
+    }
+
+    fun deleteCourse(courseID: Int):Int{
+        val db = this.writableDatabase
+       val result = db.delete(courseTableName,"$id=?",arrayOf(courseID.toString()))
+        db.close()
+        Log.i("Yoga Db","Deleted Record : $result")
+        return result
+    }
+
+    fun resetCourse():Int{
+        val db = this.writableDatabase
+        val result = db.delete(courseTableName,null,null)
+        db.close()
+        return result
+    }
+
+    fun saveClass(yogaClass: YogaClass): Long{
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.apply {
+            put(dateOfClass,yogaClass.dateOfClass)
+            put(teacher,yogaClass.teacher)
+            put(comments,yogaClass.comments)
+            put(courseID,yogaClass.courseID)
+        }
+        val result = db.insert(classTableName,null,values)
+        return result
+    }
 }
