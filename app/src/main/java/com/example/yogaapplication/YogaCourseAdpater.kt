@@ -7,8 +7,9 @@ import com.example.yogaapplication.databinding.CourseItemViewBinding
 
 class YogaCourseAdpater(val courseList:List<YogaCourse>,
     val onEditClick:(YogaCourse)-> Unit,
-    val onDeleteClick:(Int)-> Unit
-    ): RecyclerView.Adapter<YogaCourseAdpater.YogaCourseViewHolder>()
+    val onDeleteClick:(Int)-> Unit,
+                        val onAddClick: (YogaCourse) -> Unit
+): RecyclerView.Adapter<YogaCourseAdpater.YogaCourseViewHolder>()
 {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,6 +36,11 @@ class YogaCourseAdpater(val courseList:List<YogaCourse>,
         holder.binding.btnDeleteCourse.setOnClickListener {
             onDeleteClick(courseItem.id)
         }
+
+        holder.binding.btnAddClass.setOnClickListener {
+            onAddClick(courseItem)
+        }
+
     }
 
     override fun getItemCount(): Int {

@@ -128,6 +128,11 @@ class YogaDBHelper(context: Context): SQLiteOpenHelper(context,"yoga.db",null,1)
         return  result
     }
 
+    override fun onConfigure(db: SQLiteDatabase) {
+        super.onConfigure(db)
+        db.setForeignKeyConstraintsEnabled(true)
+    }
+
     fun deleteCourse(courseID: Int):Int{
         val db = this.writableDatabase
        val result = db.delete(courseTableName,"$id=?",arrayOf(courseID.toString()))

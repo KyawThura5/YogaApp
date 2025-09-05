@@ -1,5 +1,6 @@
 package com.example.yogaapplication
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -40,6 +41,10 @@ class ShowCoursesActivity : AppCompatActivity() {
             },
             onDeleteClick ={courseId ->
                 deleteAction(courseId)
+            },
+            {yogaCourse ->
+                addAction(yogaCourse)
+
             }
         )
 
@@ -157,6 +162,44 @@ private fun ShowCoursesActivity.editAction(yogaCourse: YogaCourse) {
         return result
     }
     }
+
+private fun ShowCoursesActivity.addAction(yogaCourse: YogaCourse) {
+    val dialogView = layoutInflater.inflate(R.layout.add_class_layout,null)
+    val dateInput = dialogView.findViewById<EditText>(R.id.dateOfClass)
+    val teacherInput = dialogView.findViewById<EditText>(R.id.teacher)
+    val commentInput = dialogView.findViewById<EditText>(R.id.comment)
+
+    AlertDialog.Builder(this)
+        .setTitle("Add Class ${yogaCourse.dayOfWeek} for ${yogaCourse.typeOfClass}")
+        .setView(dialogView)
+        .setPositiveButton("ADD", DialogInterface.OnClickListener {dialog, which->
+            val date = dateInput.text.toString()
+            val teacher = teacherInput.text.toString()
+            val comment = commentInput.text.toString()
+
+            if (date.isEmpty() || teacher.isEmpty()) {
+                Toast.makeText(this, "Date and Teacher cannot be empty", Toast.LENGTH_SHORT).show()
+                return@OnClickListener
+            }
+            val yogaClass = YogaClass(
+                id = 0,   // auto-increment in DB
+                dateOfClass = date,
+                teacher = teacher,
+                comments = comment,
+                courseID = yogaCourse.id   // link class to course
+            )
+
+            val result = dbHelper.saveClass(yogaClass)
+
+            if (result > 0) {
+                Toast.makeText(this, "Class added successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to add class!", Toast.LENGTH_SHORT).show()
+            }
+        })
+        .setNegativeButton("Cancel", null)
+        .show()
+}
 
 
 
