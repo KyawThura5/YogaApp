@@ -8,7 +8,8 @@ import com.example.yogaapplication.databinding.CourseItemViewBinding
 class YogaCourseAdpater(val courseList:List<YogaCourse>,
     val onEditClick:(YogaCourse)-> Unit,
     val onDeleteClick:(Int)-> Unit,
-                        val onAddClick: (YogaCourse) -> Unit
+                        val onAddClick: (YogaCourse) -> Unit,
+                        val onShowDetailsCourse:(YogaCourse) -> Unit
 ): RecyclerView.Adapter<YogaCourseAdpater.YogaCourseViewHolder>()
 {
     override fun onCreateViewHolder(
@@ -39,6 +40,10 @@ class YogaCourseAdpater(val courseList:List<YogaCourse>,
 
         holder.binding.btnAddClass.setOnClickListener {
             onAddClick(courseItem)
+        }
+
+        holder.binding.btnShowDetailCourse.setOnClickListener {
+            onShowDetailsCourse(courseItem)
         }
 
     }

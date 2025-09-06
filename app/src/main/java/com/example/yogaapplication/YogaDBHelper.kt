@@ -160,4 +160,29 @@ class YogaDBHelper(context: Context): SQLiteOpenHelper(context,"yoga.db",null,1)
         val result = db.insert(classTableName,null,values)
         return result
     }
+
+    fun showCourseDetails(id: Int):List<YogaClass>{
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM $classTableName WHERE $courseID = ?",
+            arrayOf(id.toString())
+        )
+        val classList = mutableListOf<YogaClass>()
+        if(cursor.moveToFirst()){
+            do{
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val date = cursor.getString(cursor.getColumnIndexOrThrow(dateOfClass))
+                val teacher = cursor.getString(cursor.getColumnIndexOrThrow(teacher))
+                val comment = cursor.getString(cursor.getColumnIndexOrThrow(comments))
+                val cID = cursor.getInt(cursor.getColumnIndexOrThrow(courseID))
+
+                classList.add(
+                    YogaClass(id,date,teacher,comment,cID)
+                )
+            }while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return  classList
+    }
 }

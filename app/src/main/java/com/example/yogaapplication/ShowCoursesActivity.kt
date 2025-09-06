@@ -45,6 +45,10 @@ class ShowCoursesActivity : AppCompatActivity() {
             {yogaCourse ->
                 addAction(yogaCourse)
 
+            },
+            onShowDetailsCourse={yogaCourse -> 
+                showDetails(yogaCourse)
+                        
             }
         )
 
@@ -162,6 +166,29 @@ private fun ShowCoursesActivity.editAction(yogaCourse: YogaCourse) {
         return result
     }
     }
+
+private fun ShowCoursesActivity.showDetails(yogaCourse: com.example.yogaapplication.YogaCourse) {
+ val classList = dbHelper.showCourseDetails(yogaCourse.id)
+    val builder = StringBuilder()
+    builder.append("Course: ${yogaCourse.dayOfWeek}\n")
+    builder.append("Time: ${yogaCourse.timeOfCourse}\n")
+    builder.append("Type: ${yogaCourse.typeOfClass}\n")
+    builder.append("Classes: \n")
+    if (classList.isEmpty()){
+        builder.append("No classes available.")
+    }else{
+        classList.forEachIndexed { index, yogaClass ->
+            builder.append("${index + 1} . Date : ${yogaClass.dateOfClass} ,")
+            builder.append("Teacher : ${yogaClass.teacher} ,")
+            builder.append("Comment : ${yogaClass.comments}\n\n")
+        }
+    }
+    AlertDialog.Builder(this)
+        .setTitle("Course Details")
+        .setMessage(builder.toString())
+        .setPositiveButton("OK", null)
+        .show()
+}
 
 private fun ShowCoursesActivity.addAction(yogaCourse: YogaCourse) {
     val dialogView = layoutInflater.inflate(R.layout.add_class_layout,null)
