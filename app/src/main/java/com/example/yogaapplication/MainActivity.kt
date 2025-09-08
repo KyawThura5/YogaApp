@@ -29,5 +29,11 @@ class MainActivity : AppCompatActivity() {
            // finish()
         }
 
+        binding.btnClassEntry.setOnClickListener {
+            intent = Intent(this, ShowClassesActivity::class.java)
+            startActivity(intent)
+            //finish()
+        }
+
     }
 }

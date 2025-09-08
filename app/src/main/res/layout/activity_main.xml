@@ -45,6 +45,7 @@
             />
 
         <ImageButton
+            android:id="@+id/btnClassEntry"
             android:src="@drawable/ic_launcher_background"
             android:layout_columnWeight="1"
             android:layout_width="100dp"

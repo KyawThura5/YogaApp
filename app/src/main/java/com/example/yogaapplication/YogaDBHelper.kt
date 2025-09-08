@@ -185,4 +185,109 @@ class YogaDBHelper(context: Context): SQLiteOpenHelper(context,"yoga.db",null,1)
         db.close()
         return  classList
     }
+    fun getAllClass(): List<YogaClass> {
+        val classList = mutableListOf<YogaClass>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM $classTableName",
+            null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(id))
+                val dateOfClass = cursor.getString(cursor.getColumnIndexOrThrow(dateOfClass))
+                val teacher = cursor.getString(cursor.getColumnIndexOrThrow(teacher))
+                val comments = cursor.getString(cursor.getColumnIndexOrThrow(comments))
+                val courseId = cursor.getInt(cursor.getColumnIndexOrThrow(courseID))
+
+                val classItem = YogaClass(id, dateOfClass, teacher, comments, courseId)
+                classList.add(classItem)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return classList
+    }
+
+    fun deleteClass(classID: Int):Int{
+        val db = this.writableDatabase
+        val result = db.delete(classTableName,"$id=?",arrayOf(classID.toString()))
+        db.close()
+        Log.i("Yoga Db","Deleted Record : $result")
+        return result
+    }
+
+    fun editClass(yogaClass: YogaClass ): Int {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(dateOfClass, yogaClass.dateOfClass)
+            put(teacher, yogaClass.teacher)
+            put(comments, yogaClass.comments)
+            put(courseID, yogaClass.courseID)
+        }
+
+        // update the row where id matches
+        val result = db.update(
+            classTableName,
+            values,
+            "id = ?",
+            arrayOf(yogaClass.id.toString())
+        )
+
+        db.close()
+        return result  // returns number of rows updated
+    }
+
+    fun getClassById(clID: Int): YogaClass? {
+        val db = this.readableDatabase
+        var result: YogaClass? = null
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM $classTableName WHERE id = ?",
+            arrayOf(clID.toString())
+        )
+
+        if (cursor.moveToFirst()) {
+            result = YogaClass(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow(id)),
+                dateOfClass = cursor.getString(cursor.getColumnIndexOrThrow(dateOfClass)),
+                teacher = cursor.getString(cursor.getColumnIndexOrThrow(teacher)),
+                comments = cursor.getString(cursor.getColumnIndexOrThrow(comments)),
+                courseID = cursor.getInt(cursor.getColumnIndexOrThrow(courseID))
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return result
+    }
+
+    fun getCourseById(courseID: Int): YogaCourse? {
+        val db = this.readableDatabase
+        var course: YogaCourse? = null
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM $courseTableName WHERE id = ?",
+            arrayOf(courseID.toString())
+        )
+        if (cursor.moveToFirst()) {
+            course = YogaCourse(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow(id)),
+                dayOfWeek = cursor.getString(cursor.getColumnIndexOrThrow(dayOfWeek)),
+                timeOfCourse = cursor.getString(cursor.getColumnIndexOrThrow(timeOfCourse)),
+                capacity = cursor.getString(cursor.getColumnIndexOrThrow(capacity)),
+                duration = cursor.getString(cursor.getColumnIndexOrThrow(duration)),
+                price = cursor.getString(cursor.getColumnIndexOrThrow(price)),
+                typeOfClass = cursor.getString(cursor.getColumnIndexOrThrow(typeOfClass)),
+                description = cursor.getString(cursor.getColumnIndexOrThrow(description))
+            )
+        }
+
+        cursor.close()
+        db.close()
+        return course
+    }
+
+
+
 }
